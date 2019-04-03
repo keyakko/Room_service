@@ -1,0 +1,14 @@
+[Unit]
+Description=room service
+After=network-online.target
+After=pi-blaster.service
+
+[Service]
+ExecStart=/usr/local/bin/go run /home/pi/git/room_service/main.go
+EnvironmentFile=/home/pi/git/room_service/.env
+User=pi
+Restart=always
+WorkingDirectory=/home/pi/git/room_service
+
+[Install]
+WantedBy=multi-user.target

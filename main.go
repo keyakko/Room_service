@@ -6,6 +6,7 @@ import (
   "os"
   "fmt"
   "strings"
+  "time"
 )
 
 // slackAPI lib
@@ -15,7 +16,7 @@ import (
 
 // gobot libraries
 import (
-  "gobot.io/x/gobot"
+  //"gobot.io/x/gobot"
   "gobot.io/x/gobot/drivers/gpio"
   "gobot.io/x/gobot/platforms/raspi"
 )
@@ -25,8 +26,8 @@ func run (api *slack.Client) (int) {
 
   // survo settings
   adaptor := raspi.NewAdaptor()
-  servo := gpio.NewServoDriver(adaptor, "16")
-
+  servo := gpio.NewServoDriver(adaptor, "12")
+/*
   work := func () {
     servo.Move(uint8(27))
     servo.Move(uint8(32))
@@ -39,7 +40,7 @@ func run (api *slack.Client) (int) {
     []gobot.Device{servo},
     work,
   )
-
+*/
 
   rtm := api.NewRTM()
   go rtm.ManageConnection()
@@ -55,9 +56,13 @@ func run (api *slack.Client) (int) {
           log.Printf("text: %+v\n", ev.Msg.Text)
           if strings.Index(ev.Msg.Text, "開けて") != -1 {
             rtm.SendMessage(rtm.NewOutgoingMessage("まかせて！", ev.Channel))
-            robot.Start()
+            //robot.Start()
+            servo.Move(uint8(20))
+            servo.Move(uint8(22))
+	    time.Sleep(1 * time.Second)
+            servo.Move(uint8(20))
           } else {
-            rtm.SendMessage(rtm.NewOutgoingMessage("理解できないメッセージだから無視するよ。", ev.Channel))
+            //rtm.SendMessage(rtm.NewOutgoingMessage("理解できないメッセージだから無視するよ。", ev.Channel))
           }
 
 
